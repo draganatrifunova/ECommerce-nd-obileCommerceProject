@@ -1,0 +1,54 @@
+package mk.ukim.finki.emt_2025.auctionApplication.web;
+
+import mk.ukim.finki.emt_2025.auctionApplication.dto.CreateAuctionDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayAuctionDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayItemDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayUserDto;
+import mk.ukim.finki.emt_2025.auctionApplication.model.User;
+import mk.ukim.finki.emt_2025.auctionApplication.service.application.AuctionApplicationService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/auctions")
+public class AuctionController {
+    private final AuctionApplicationService auctionApplicationService;
+
+    public AuctionController(AuctionApplicationService auctionApplicationService) {
+        this.auctionApplicationService = auctionApplicationService;
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DisplayAuctionDto> findByIdAndOrganizer(@PathVariable Long id, @RequestBody User organizer) {
+        return ResponseEntity.ok(this.auctionApplicationService
+                .findByIdAndOrganizer(id, organizer));
+
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DisplayAuctionDto>> findAll() {
+        return ResponseEntity.ok(this.auctionApplicationService
+                .findAll());
+    }
+
+    @PutMapping("/{id}/start")
+    public ResponseEntity<DisplayAuctionDto> startByIdAndOrganizer(@PathVariable Long id,  @RequestBody User organizer) {
+        return ResponseEntity.ok(this.auctionApplicationService
+                .startByIdAndOrganizer(id, organizer));
+    }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<DisplayAuctionDto> cancelByIdAndOrganizer(@PathVariable Long id, @RequestBody User organizer) {
+        return ResponseEntity.ok(this.auctionApplicationService
+                .cancelByIdAndOrganizer(id, organizer));
+    }
+
+    @PutMapping("/{id}/finish")
+    public ResponseEntity<DisplayAuctionDto> finishByIdAndOrganizer(@PathVariable Long id, @RequestBody User organizer) {
+        return ResponseEntity.ok(this.auctionApplicationService
+                .finishByIdAndOrganizer(id, organizer));
+    }
+}

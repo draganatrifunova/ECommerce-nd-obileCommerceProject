@@ -1,0 +1,44 @@
+package mk.ukim.finki.emt_2025.auctionApplication.dto;
+
+import mk.ukim.finki.emt_2025.auctionApplication.model.Auction;
+import mk.ukim.finki.emt_2025.auctionApplication.model.Item;
+import mk.ukim.finki.emt_2025.auctionApplication.model.Status;
+import mk.ukim.finki.emt_2025.auctionApplication.model.User;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public record DisplayAuctionDto(Long id,
+                                LocalDateTime timeStarting,
+                                LocalDateTime timeFinishing,
+                                Status status,
+                                List<Long> items_id,
+                                Long organizer_id,
+                                List<Long> visitors_id) {
+
+    public static DisplayAuctionDto from(Auction auction) {
+        return new DisplayAuctionDto(
+                auction.getId(),
+                auction.getTimeStarting(),
+                auction.getTimeFinishing(),
+                auction.getStatus(),
+                auction.getItems().stream()
+                        .map(Item::getId)
+                        .collect(Collectors.toList()),
+                auction.getOrganizer().getId(),
+                auction.getVisitors()
+                        .stream().map(User::getId)
+                        .collect(Collectors.toList())
+        );
+    }
+
+
+    public static List<DisplayAuctionDto> from(List<Auction> auctions) {
+        return auctions
+                .stream()
+                .map(DisplayAuctionDto::from)
+                .collect(Collectors.toList());
+    }
+
+}
