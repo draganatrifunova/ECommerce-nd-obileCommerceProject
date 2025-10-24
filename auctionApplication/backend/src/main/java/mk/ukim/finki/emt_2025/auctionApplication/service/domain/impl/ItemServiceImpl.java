@@ -75,17 +75,4 @@ public class ItemServiceImpl implements ItemService {
         return this.auctionRepository.save(auction);
     }
 
-    @Override
-    public Item addItemToAuction(Item item, Auction auction) {
-        if(auction.getStatus() != Status.RESERVED){
-            throw new AuctionStatusIsNotProper();
-        }
-        if(!item.isAvailable()){
-            throw new ItemIsNotAvailableException();
-        }
-
-        auction.getItems().add(item);
-        this.auctionRepository.save(auction);
-        return item;
-    }
 }

@@ -22,11 +22,11 @@ public class Auction {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    //da validiram u servise slojo deka edna aukcija mora da ima barem eden Item
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Item> items = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Item item;
     //cascade = CascadeType.ALL -->  Ova znaci deka koga ke izvrsite dejstvo
-    //na aukciajta, toa ke se prenese na nejzinite items
+    //na aukciajta, toa ke se prenese na nejziniot item
 
     @ManyToOne
     @JoinColumn(name = "organizer_id", nullable = false)
@@ -45,7 +45,7 @@ public class Auction {
         this.organizer = organizer;
         status = Status.RESERVED;
         visitors = new ArrayList<>();
-        this.items.add(item);
+        this.item = item;
     }
 
 

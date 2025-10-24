@@ -13,7 +13,7 @@ public record DisplayAuctionDto(Long id,
                                 LocalDateTime timeStarting,
                                 LocalDateTime timeFinishing,
                                 Status status,
-                                List<Long> items_id,
+                                Long items_id,
                                 Long organizer_id,
                                 List<Long> visitors_id) {
 
@@ -23,9 +23,7 @@ public record DisplayAuctionDto(Long id,
                 auction.getTimeStarting(),
                 auction.getTimeFinishing(),
                 auction.getStatus(),
-                auction.getItems().stream()
-                        .map(Item::getId)
-                        .collect(Collectors.toList()),
+                auction.getItem().getId(),
                 auction.getOrganizer().getId(),
                 auction.getVisitors()
                         .stream().map(User::getId)

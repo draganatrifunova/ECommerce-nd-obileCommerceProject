@@ -1,9 +1,6 @@
-package mk.ukim.finki.emt_2025.auctionApplication.web;
+package mk.ukim.finki.emt_2025.auctionApplication.web.controllers;
 
-import mk.ukim.finki.emt_2025.auctionApplication.dto.CreateAuctionDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayAuctionDto;
-import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayItemDto;
-import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayUserDto;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 import mk.ukim.finki.emt_2025.auctionApplication.service.application.AuctionApplicationService;
 import org.springframework.http.ResponseEntity;

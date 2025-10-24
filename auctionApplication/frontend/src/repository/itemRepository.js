@@ -36,8 +36,13 @@ const itemRepository = {
 
 
     delete: async (id) => {
-        return await instance.delete(`/items/${id}`);
+        return await instance.delete(`/items/delete/${id}`);
+    },
+
+    createAuction: async (id) => {
+        return await instance.post(`/items/${id}/createAuction`)
     }
+
 };
 
 export default itemRepository;

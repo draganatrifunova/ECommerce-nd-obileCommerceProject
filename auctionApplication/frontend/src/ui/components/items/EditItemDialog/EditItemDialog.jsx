@@ -91,7 +91,7 @@ const EditItemDialog = ({open, onClose, onEdit, item}) => {
                         </Typography>
                         <Box
                             component="img"
-                            src={`http://localhost:8080${formData.existingImageUrl}`}
+                            src={`http://localhost:8080${formData.existingImageUrl}?t=${Date.now()}`}
                             alt="Preview"
                             sx={{
                                 width: "100%",

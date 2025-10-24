@@ -4,7 +4,8 @@ import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} fr
 const initialFormData = {
     "name": "",
     "surname": "",
-    "username": ""
+    "username": "",
+    "password": ""
 };
 
 const AddUserDialog = ({open, onClose, onAdd}) => {
@@ -50,6 +51,15 @@ const AddUserDialog = ({open, onClose, onAdd}) => {
                     name="username"
                     type="text"
                     value={formData.username}
+                    onChange={handleChange}
+                    fullWidth
+                />
+                <TextField
+                    margin="dense"
+                    label="Password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
                     onChange={handleChange}
                     fullWidth
                 />

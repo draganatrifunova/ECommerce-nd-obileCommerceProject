@@ -9,19 +9,26 @@ import UserDetails from "./ui/components/users/UserDetails/UserDetails"
 import ItemDetails from "./ui/components/items/ItemDetails/ItemDetails"
 import AuctionPage from "./ui/pages/AuctionPage/AuctionPage";
 import AuctionDetails from "./ui/components/auctions/AuctionDetails/AuctionDetails";
+import Register from "./ui/components/auth/Register/Register";
+import Login from "./ui/components/auth/Login/Login"
+import ProtectedRoute from "./ui/components/routing/ProtectedRoute/ProtectedRoute";
 
 const App = () => {
     return (
         <BrowserRouter>
             <Routes>
+                <Route path="/register" element={<Register/>}/>
+                <Route path="/login" element={<Login/>}/>
                 <Route path="/" element={<Layout/>}>
                     <Route index element={<HomePage/>}/>
-                    <Route path="users" element={<UserPage/>}/>
-                    <Route path="users/:id" element={<UserDetails/>}/>
-                    <Route path="items" element={<ItemPage/>}/>
-                    <Route path="items/:id" element={<ItemDetails/>}/>
-                    <Route path="auctions" element={<AuctionPage/>}/>
-                    <Route path="auctions/:id" element={<AuctionDetails/>}/>
+                    <Route element={<ProtectedRoute/>}>
+                        <Route path="users" element={<UserPage/>}/>
+                        <Route path="users/:id" element={<UserDetails/>}/>
+                        <Route path="items" element={<ItemPage/>}/>
+                        <Route path="items/:id" element={<ItemDetails/>}/>
+                        <Route path="auctions" element={<AuctionPage/>}/>
+                        <Route path="auctions/:id" element={<AuctionDetails/>}/>
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter>

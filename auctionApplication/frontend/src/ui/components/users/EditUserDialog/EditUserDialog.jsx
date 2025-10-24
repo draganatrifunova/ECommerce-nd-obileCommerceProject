@@ -7,7 +7,8 @@ const EditUserDialog = ({open, onClose, onEdit, user}) => {
     const [formData, setFormData] = useState({
         "name": user.name,
         "surname": user.surname,
-        "username" : user.username
+        "username": user.username,
+        "password": ""
     });
 
     const handleChange = (event) => {
@@ -34,7 +35,6 @@ const EditUserDialog = ({open, onClose, onEdit, user}) => {
                     onChange={handleChange}
                     fullWidth
                 />
-
                 <TextField
                     margin="dense"
                     label="Surname"
@@ -44,13 +44,21 @@ const EditUserDialog = ({open, onClose, onEdit, user}) => {
                     onChange={handleChange}
                     fullWidth
                 />
-
                 <TextField
                     margin="dense"
                     label="Username"
                     name="username"
                     type="text"
                     value={formData.username}
+                    onChange={handleChange}
+                    fullWidth
+                />
+                <TextField
+                    margin="dense"
+                    label="Password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
                     onChange={handleChange}
                     fullWidth
                 />

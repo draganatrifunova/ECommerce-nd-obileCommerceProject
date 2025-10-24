@@ -84,13 +84,4 @@ public class ItemApplicationServiceImpl implements ItemApplicationService {
                 .createAuction(item, organizer);
     }
 
-    @Override
-    public Item addItemToAuction(Long id, Long auctionId) {
-        Item item = this.itemService.findById(id);
-        Auction auction = this.auctionService
-                .findById(auctionId);
-
-        return this.itemService
-                .addItemToAuction(item, auction);
-    }
 }

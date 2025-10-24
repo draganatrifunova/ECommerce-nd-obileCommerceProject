@@ -3,7 +3,7 @@ import instance from "../custom-axios/axios"
 
 const userRepository = {
     add: async (data) => {
-        return await instance.post("/users/add", data);
+        return await instance.post("/users/register", data);
     },
 
     edit: async (id, data) => {
@@ -21,6 +21,10 @@ const userRepository = {
 
     findById: async (id) => {
         return await instance.get(`/users/${id}`)
+    },
+
+    login: async (data) => {
+        return await instance.post(`/users/login`, data)
     }
 };
 

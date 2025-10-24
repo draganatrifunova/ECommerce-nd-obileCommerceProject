@@ -7,7 +7,7 @@ import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record CreateAuctionDto(List<Long> items_id,
+public record CreateAuctionDto(Long item_id,
                                Long organizer_id,
                                List<Long> visitors_id) {
 

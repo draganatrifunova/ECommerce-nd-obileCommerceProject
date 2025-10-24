@@ -1,21 +1,26 @@
 package mk.ukim.finki.emt_2025.auctionApplication.service.application;
 
-import mk.ukim.finki.emt_2025.auctionApplication.dto.CreateUserDto;
-import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayUserDto;
-import mk.ukim.finki.emt_2025.auctionApplication.model.Auction;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.LoginUserRequestDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.LoginUserResponseDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.RegisterUserRequestDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.RegisterUserResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserApplicationService {
-    DisplayUserDto addUser(CreateUserDto createUserDto);
+    RegisterUserResponseDto register(RegisterUserRequestDto registerUserRequestDto);
 
-    List<DisplayUserDto> listUsers();
+    List<RegisterUserResponseDto> listUsers();
 
-    DisplayUserDto updateUser(Long id, CreateUserDto createUserDto);
+    RegisterUserResponseDto updateUser(Long id, RegisterUserRequestDto registerUserRequestDto);
 
     void deleteUser(Long id);
 
-    DisplayUserDto findById(Long id);
+    RegisterUserResponseDto findById(Long id);
+
+    //da go brisam
     void addVisitor(Long visitorId, Long auctionId);
 
+    LoginUserResponseDto login(LoginUserRequestDto loginUserRequestDto);
 }

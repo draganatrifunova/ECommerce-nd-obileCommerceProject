@@ -1,4 +1,4 @@
-package mk.ukim.finki.emt_2025.auctionApplication.web;
+package mk.ukim.finki.emt_2025.auctionApplication.web.controllers;
 
 import mk.ukim.finki.emt_2025.auctionApplication.dto.CreateItemDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayAuctionDto;
@@ -76,7 +76,7 @@ public class ItemController {
                 .listAllItems());
     }
 
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/delete/{itemId}")
     public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
         this.itemApplicationService
                 .deleteItem(itemId);
@@ -92,15 +92,6 @@ public class ItemController {
                 .itemApplicationService
                 .createAuction(id, organizerId)));
 
-    }
-
-
-    @PostMapping("/{id}/addInAuction")
-    public ResponseEntity<DisplayItemDto> addItemToAuction(@PathVariable Long id,
-                                                           @RequestParam Long auctionId) {
-        return ResponseEntity.ok(DisplayItemDto.from(this
-                .itemApplicationService
-                .addItemToAuction(id, auctionId)));
     }
 
 }

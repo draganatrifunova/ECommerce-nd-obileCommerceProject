@@ -67,10 +67,9 @@ public class AuctionServiceImpl implements AuctionService {
             throw new AuctionStatusIsNotProper();
         }
         auction.calcelAuction();
-        auction.getItems()
-                .forEach(Item::removeItemFromAuction);
+        auction.getItem().removeItemFromAuction();
 
-        this.itemRepository.saveAll(auction.getItems());
+        this.itemRepository.save(auction.getItem());
         return this.auctionRepository.save(auction);
     }
 

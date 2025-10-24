@@ -1,11 +1,6 @@
 package mk.ukim.finki.emt_2025.auctionApplication.service.application;
 
-import mk.ukim.finki.emt_2025.auctionApplication.dto.CreateAuctionDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayAuctionDto;
-import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayItemDto;
-import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayUserDto;
-import mk.ukim.finki.emt_2025.auctionApplication.model.Auction;
-import mk.ukim.finki.emt_2025.auctionApplication.model.Item;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 
 import java.util.List;

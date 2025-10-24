@@ -1,17 +1,23 @@
 import {useNavigate} from "react-router-dom";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Box, Button, Card, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditItemDialog from "../EditItemDialog/EditItemDialog";
 import DeleteItemDialog from "../DeleteItemDialog/DeleteItemDialog";
+import AuthContext from "../../../../contexts/authContext";
 
 const ItemCard = ({item, onEdit, onDelete}) => {
     const navigate = useNavigate();
 
     const [editItemDialogOpen, setEditItemDialogOpen] = useState(false);
     const [deleteItemDialogOpen, setDeleteItemDialogOpen] = useState(false);
+
+    const {user} = useContext(AuthContext);
+    const roles = user?.roles || [];
+    const isAdmin = roles.includes("ROLE_ADMIN");
+    const isOwner = roles.includes("ROLE_OWNER");
 
     return (
         <>
@@ -29,7 +35,7 @@ const ItemCard = ({item, onEdit, onDelete}) => {
                 <CardMedia
                     component="img"
                     height="200"
-                    image={item.imageUrl ? `http://localhost:8080${item.imageUrl}` : "https://via.placeholder.com/200x200?text=No+Image"}
+                    image={item.imageUrl ? `http://localhost:8080${item.imageUrl}?t=${Date.now()}` : "https://via.placeholder.com/200x200?text=No+Image"}
                     alt={item.name || "No image"}
                 />
                 <CardContent sx={{pb: 0}}>
@@ -61,7 +67,8 @@ const ItemCard = ({item, onEdit, onDelete}) => {
                             color="warning"
                             startIcon={<EditIcon/>}
                             sx={{mr: "0.25rem"}}
-                            onClick={() => setEditItemDialogOpen(true)}>
+                            onClick={() => setEditItemDialogOpen(true)}
+                            disabled={!(isAdmin || isOwner)}>
                             Edit
                         </Button>
 
@@ -69,7 +76,8 @@ const ItemCard = ({item, onEdit, onDelete}) => {
                             size="small"
                             color="error"
                             startIcon={<DeleteIcon/>}
-                            onClick={() => setDeleteItemDialogOpen(true)}>
+                            onClick={() => setDeleteItemDialogOpen(true)}
+                            disabled={!isAdmin}>
                             Delete
                         </Button>
                     </Box>
