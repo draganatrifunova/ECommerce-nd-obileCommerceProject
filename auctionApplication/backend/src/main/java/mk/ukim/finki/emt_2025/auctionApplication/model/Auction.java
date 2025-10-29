@@ -23,10 +23,10 @@ public class Auction {
     private Status status;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Item item;
-    //cascade = CascadeType.ALL -->  Ova znaci deka koga ke izvrsite dejstvo
-    //na aukciajta, toa ke se prenese na nejziniot item
+    @ManyToOne
+    private Item item;  //edna aukcija ede Item ama koga ke se otkaze nekoja aukcija
+    //toj item treba pak da se pojavi vo nova
+
 
     @ManyToOne
     @JoinColumn(name = "organizer_id", nullable = false)

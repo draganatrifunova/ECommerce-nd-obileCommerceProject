@@ -42,7 +42,6 @@ const itemRepository = {
     createAuction: async (id) => {
         return await instance.post(`/items/${id}/createAuction`)
     }
-
 };
 
 export default itemRepository;

@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record CreateAuctionDto(Long item_id,
-                               Long organizer_id,
-                               List<Long> visitors_id) {
+                               Long organizer_id) {
 
     public Auction toAuction(User organizer, Item item) {
         return new Auction(organizer, item);

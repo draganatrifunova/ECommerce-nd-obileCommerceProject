@@ -1,14 +1,16 @@
 import {useNavigate, useParams} from "react-router-dom";
 import useItemDetails from "../../../../hooks/useItemDetails";
 import {Box, Breadcrumbs, Button, CardMedia, CircularProgress, Link, Paper, Stack, Typography} from "@mui/material";
-import React from "react";
+import React, {useContext} from "react";
 import {ArrowBack, Cancel, CheckCircle} from "@mui/icons-material";
 import itemRepository from "../../../../repository/itemRepository";
+import AuthContext from "../../../../contexts/authContext";
 
 const ItemDetails = () => {
     const navigate = useNavigate();
     const {id} = useParams();
     const {item, fetch} = useItemDetails(id);
+
 
     if (!item) {
         return <Box className="progress-box"><CircularProgress/></Box>;
@@ -82,6 +84,7 @@ const ItemDetails = () => {
                             variant="contained"
                             sx={{mr: "1rem"}}
                             onClick={() => createAuct()}
+                            disabled={item.available === false}
                         >
                             Create Auction
                         </Button>

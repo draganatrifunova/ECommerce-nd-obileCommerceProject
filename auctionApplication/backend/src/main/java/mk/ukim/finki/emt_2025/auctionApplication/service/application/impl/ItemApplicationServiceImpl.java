@@ -2,6 +2,7 @@ package mk.ukim.finki.emt_2025.auctionApplication.service.application.impl;
 
 import mk.ukim.finki.emt_2025.auctionApplication.dto.CreateItemDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayItemDto;
+import mk.ukim.finki.emt_2025.auctionApplication.exceptions.UserNotFoundException;
 import mk.ukim.finki.emt_2025.auctionApplication.model.Auction;
 import mk.ukim.finki.emt_2025.auctionApplication.model.Item;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
@@ -9,6 +10,7 @@ import mk.ukim.finki.emt_2025.auctionApplication.service.application.ItemApplica
 import mk.ukim.finki.emt_2025.auctionApplication.service.domain.AuctionService;
 import mk.ukim.finki.emt_2025.auctionApplication.service.domain.ItemService;
 import mk.ukim.finki.emt_2025.auctionApplication.service.domain.UserService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -76,9 +78,8 @@ public class ItemApplicationServiceImpl implements ItemApplicationService {
     }
 
     @Override
-    public Auction createAuction(Long id, Long organizerId) {
+    public Auction createAuction(Long id, User organizer) {
         Item item = this.itemService.findById(id);
-        User organizer = this.userService.findById(organizerId);
 
         return this.itemService
                 .createAuction(item, organizer);

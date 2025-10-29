@@ -12,6 +12,7 @@ import AuctionDetails from "./ui/components/auctions/AuctionDetails/AuctionDetai
 import Register from "./ui/components/auth/Register/Register";
 import Login from "./ui/components/auth/Login/Login"
 import ProtectedRoute from "./ui/components/routing/ProtectedRoute/ProtectedRoute";
+import StartAuctionDialog from "./ui/components/auctions/StartAuctionDialog/StartAuctionDialog";
 
 const App = () => {
     return (
@@ -28,6 +29,7 @@ const App = () => {
                         <Route path="items/:id" element={<ItemDetails/>}/>
                         <Route path="auctions" element={<AuctionPage/>}/>
                         <Route path="auctions/:id" element={<AuctionDetails/>}/>
+                        <Route path="auctions/:id/start" element={<StartAuctionDialog/>}/>
                     </Route>
                 </Route>
             </Routes>

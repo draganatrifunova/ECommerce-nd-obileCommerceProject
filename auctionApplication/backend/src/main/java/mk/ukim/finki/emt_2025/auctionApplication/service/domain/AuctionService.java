@@ -17,6 +17,8 @@ public interface AuctionService {
     Auction cancelByIdAndOrganizer(Long id, User organizer);
     Auction finishByIdAndOrganizer(Long id, User organizer);
 
+    User joinAuction(Long auctionId, User visitor);
+
     //samo organizer moze da ja startuva aukcijata, da ja otrkaze ili da ja zavrse
     //zatoa imame metod findByIdAndOrganizer :)
 

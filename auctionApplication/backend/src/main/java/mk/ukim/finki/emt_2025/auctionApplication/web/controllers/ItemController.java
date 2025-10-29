@@ -10,6 +10,7 @@ import mk.ukim.finki.emt_2025.auctionApplication.service.application.ItemApplica
 import mk.ukim.finki.emt_2025.auctionApplication.service.domain.ItemService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,11 +88,9 @@ public class ItemController {
 
     @PostMapping("/{id}/createAuction")
     public ResponseEntity<DisplayAuctionDto> createAuction(@PathVariable Long id,
-                                                           @RequestParam Long organizerId) {
+                                                           @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(DisplayAuctionDto.from(this
                 .itemApplicationService
-                .createAuction(id, organizerId)));
-
+                .createAuction(id, user)));
     }
-
 }

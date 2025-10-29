@@ -13,9 +13,13 @@ public record DisplayAuctionDto(Long id,
                                 LocalDateTime timeStarting,
                                 LocalDateTime timeFinishing,
                                 Status status,
-                                Long items_id,
+                                Long item_id,
                                 Long organizer_id,
-                                List<Long> visitors_id) {
+                                List<String> visitors_username,
+                                String itemName,
+                                String organizerName,
+                                String organizerSurname,
+                                String organizerUsername) {
 
     public static DisplayAuctionDto from(Auction auction) {
         return new DisplayAuctionDto(
@@ -26,8 +30,12 @@ public record DisplayAuctionDto(Long id,
                 auction.getItem().getId(),
                 auction.getOrganizer().getId(),
                 auction.getVisitors()
-                        .stream().map(User::getId)
-                        .collect(Collectors.toList())
+                        .stream().map(User::getUsername)
+                        .collect(Collectors.toList()),
+                auction.getItem().getName(),
+                auction.getOrganizer().getName(),
+                auction.getOrganizer().getSurname(),
+                auction.getOrganizer().getUsername()
         );
     }
 

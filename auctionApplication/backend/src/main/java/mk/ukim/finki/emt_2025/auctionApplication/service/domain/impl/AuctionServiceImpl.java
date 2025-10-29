@@ -7,6 +7,7 @@ import mk.ukim.finki.emt_2025.auctionApplication.model.Status;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 import mk.ukim.finki.emt_2025.auctionApplication.repository.AuctionRepository;
 import mk.ukim.finki.emt_2025.auctionApplication.repository.ItemRepository;
+import mk.ukim.finki.emt_2025.auctionApplication.repository.UserRepository;
 import mk.ukim.finki.emt_2025.auctionApplication.service.domain.AuctionService;
 import mk.ukim.finki.emt_2025.auctionApplication.service.domain.ItemService;
 import mk.ukim.finki.emt_2025.auctionApplication.service.domain.UserService;
@@ -14,17 +15,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class AuctionServiceImpl implements AuctionService {
     private final AuctionRepository auctionRepository;
     private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
 
 
-    public AuctionServiceImpl(AuctionRepository auctionRepository, ItemRepository itemRepository) {
+    public AuctionServiceImpl(AuctionRepository auctionRepository, ItemRepository itemRepository, UserRepository userRepository) {
         this.auctionRepository = auctionRepository;
         this.itemRepository = itemRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -37,7 +41,8 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public Auction findByIdAndOrganizer(Long id, User organizer) {
         return this.auctionRepository
-                .findByIdAndOrganizer(id, organizer);
+                .findByIdAndOrganizer(id, organizer)
+                .orElseThrow(AuctionNotFoundException::new);
     }
 
     @Override
@@ -62,15 +67,18 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public Auction cancelByIdAndOrganizer(Long id, User organizer) {
         Auction auction = this.findByIdAndOrganizer(id, organizer);
-
+        System.out.println(auction.getStatus());
         if(auction.getStatus() != Status.RESERVED){
             throw new AuctionStatusIsNotProper();
         }
-        auction.calcelAuction();
-        auction.getItem().removeItemFromAuction();
 
-        this.itemRepository.save(auction.getItem());
-        return this.auctionRepository.save(auction);
+        Item i = auction.getItem();
+        i.removeItemFromAuction();
+        auction.calcelAuction();
+
+        this.itemRepository.save(i);
+        this.auctionRepository.save(auction);
+        return auction;
     }
 
     @Override
@@ -84,5 +92,26 @@ public class AuctionServiceImpl implements AuctionService {
         //items --> ovde ne se vrakaat da bidat available zatoa sto se veke prodadeni
         auction.finishAuction();
         return this.auctionRepository.save(auction);
+    }
+
+    @Override
+    public User joinAuction(Long auctionId, User visitor) {
+
+        Auction auction = this.auctionRepository
+                .findById(auctionId)
+                .orElseThrow(AuctionNotFoundException::new);
+
+        if(auction.getStatus() != Status.RESERVED){
+            throw new AuctionStatusIsNotProper();
+        }
+
+        if(Objects.equals(auction.getOrganizer().getId(), visitor.getId())){
+            throw new AuctionOrganizerCanNotBeVisitor();
+        }
+
+        auction.getVisitors().add(visitor);
+        this.auctionRepository.save(auction);
+
+        return visitor;
     }
 }

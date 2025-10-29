@@ -2,6 +2,7 @@ package mk.ukim.finki.emt_2025.auctionApplication.service.application.impl;
 
 
 import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayAuctionDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.RegisterUserResponseDto;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 import mk.ukim.finki.emt_2025.auctionApplication.service.application.AuctionApplicationService;
 import mk.ukim.finki.emt_2025.auctionApplication.service.domain.AuctionService;
@@ -56,5 +57,11 @@ public class AuctionApplicationServiceImpl implements AuctionApplicationService 
     public DisplayAuctionDto finishByIdAndOrganizer(Long id, User organizer) {
         return DisplayAuctionDto.from(this.auctionService
                 .finishByIdAndOrganizer(id, organizer));
+    }
+
+    @Override
+    public RegisterUserResponseDto joinAuction(Long auctionId, User visitor) {
+        return RegisterUserResponseDto.from(this.auctionService
+                .joinAuction(auctionId, visitor));
     }
 }

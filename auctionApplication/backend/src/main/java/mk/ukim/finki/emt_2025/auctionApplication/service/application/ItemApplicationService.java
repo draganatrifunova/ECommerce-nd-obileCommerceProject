@@ -21,5 +21,5 @@ public interface ItemApplicationService {
 
     void deleteItem(Long itemId);
 
-    Auction createAuction(Long id, Long organizerId);
+    Auction createAuction(Long id, User organizer);
 }

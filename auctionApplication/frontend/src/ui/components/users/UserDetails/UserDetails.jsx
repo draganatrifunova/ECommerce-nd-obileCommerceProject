@@ -43,7 +43,7 @@ const UserDetails = () => {
                             Username: {user.username}
                         </Typography>
 
-                        <Typography variant="h6" color="text.secondary">
+                        <Typography variant="h6" color="text.secondary" sx={{fontStyle: 'italic'}}>
                             {user.role}
                         </Typography>
 

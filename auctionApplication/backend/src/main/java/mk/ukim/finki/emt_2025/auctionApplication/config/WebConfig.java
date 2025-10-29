@@ -55,13 +55,18 @@ public class WebConfig {
                                 "/api/users",
                                 "/api/users/{id}",
                                 "/api/auctions",
-                                "/api/{id}/createAuction"
+                                "/api/items/{id}/createAuction",
+                                "/api/auctions/{id}",
+                                "/api/auctions/{id}/organizer",
+                                "/api/auctions/{id}/start",
+                                "/api/auctions/{id}/cancel",
+                                "/api/auctions/{id}/finish",
+                                "/api/auctions/{auctionId}/addVisitor"
                         ).hasRole("CUSTOMER")
                         // owner endpoints
                         .requestMatchers(
                                 "/api/items/add",
                                 "/api/items/update/{itemId}",
-                                "/api/items/{id}/createAuction",
                                 "/api/users/update/{id}"
                         ).hasRole("OWNER")
                         // admin endpoints

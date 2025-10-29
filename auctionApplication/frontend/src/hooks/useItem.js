@@ -46,7 +46,7 @@ const useItems = () => {
         fetch();
     }, [fetch]);
 
-    return {...state, onAdd, onEdit, onDelete};
+    return {...state, fetch, onAdd, onEdit, onDelete};
 
 };
 
