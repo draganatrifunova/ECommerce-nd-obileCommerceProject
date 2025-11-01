@@ -7,28 +7,21 @@ import mk.ukim.finki.emt_2025.auctionApplication.model.Status;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 import mk.ukim.finki.emt_2025.auctionApplication.repository.AuctionRepository;
 import mk.ukim.finki.emt_2025.auctionApplication.repository.ItemRepository;
-import mk.ukim.finki.emt_2025.auctionApplication.repository.UserRepository;
 import mk.ukim.finki.emt_2025.auctionApplication.service.domain.AuctionService;
-import mk.ukim.finki.emt_2025.auctionApplication.service.domain.ItemService;
-import mk.ukim.finki.emt_2025.auctionApplication.service.domain.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AuctionServiceImpl implements AuctionService {
     private final AuctionRepository auctionRepository;
     private final ItemRepository itemRepository;
-    private final UserRepository userRepository;
 
 
-    public AuctionServiceImpl(AuctionRepository auctionRepository, ItemRepository itemRepository, UserRepository userRepository) {
+    public AuctionServiceImpl(AuctionRepository auctionRepository, ItemRepository itemRepository) {
         this.auctionRepository = auctionRepository;
         this.itemRepository = itemRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -113,5 +106,17 @@ public class AuctionServiceImpl implements AuctionService {
         this.auctionRepository.save(auction);
 
         return visitor;
+    }
+
+    @Override
+    public Auction lastUserOffer(Long auctionId, int lastPrice, String username) {
+        Auction auction = this.findById(auctionId);
+
+        if(lastPrice > auction.getLastPriceOffered()){
+            auction.setLastUserOffered(username);
+            auction.setLastPriceOffered(lastPrice);
+            this.auctionRepository.save(auction);
+        }
+        return auction;
     }
 }

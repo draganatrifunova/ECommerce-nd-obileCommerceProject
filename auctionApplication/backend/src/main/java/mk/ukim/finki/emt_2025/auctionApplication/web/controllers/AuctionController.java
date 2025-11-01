@@ -1,6 +1,8 @@
 package mk.ukim.finki.emt_2025.auctionApplication.web.controllers;
 
+import mk.ukim.finki.emt_2025.auctionApplication.dto.CreateLastUserOfferDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayAuctionDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayLastUserOfferDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.RegisterUserResponseDto;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 import mk.ukim.finki.emt_2025.auctionApplication.service.application.AuctionApplicationService;
@@ -27,7 +29,7 @@ public class AuctionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DisplayAuctionDto> findById(@PathVariable Long id){
+    public ResponseEntity<DisplayAuctionDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(this.auctionApplicationService
                 .findById(id));
     }
@@ -39,7 +41,7 @@ public class AuctionController {
     }
 
     @PutMapping("/{id}/start")
-    public ResponseEntity<DisplayAuctionDto> startByIdAndOrganizer(@PathVariable Long id,  @AuthenticationPrincipal User user) {
+    public ResponseEntity<DisplayAuctionDto> startByIdAndOrganizer(@PathVariable Long id, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(this.auctionApplicationService
                 .startByIdAndOrganizer(id, user));
     }
@@ -62,5 +64,19 @@ public class AuctionController {
         return ResponseEntity.ok(this.auctionApplicationService
                 .joinAuction(auctionId, user));
 
+    }
+
+    @PostMapping("/{id}/addOffer")
+    public ResponseEntity<DisplayLastUserOfferDto> lastUserOffer(@PathVariable Long id,
+                                                                 @RequestBody CreateLastUserOfferDto offer,
+                                                                 @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(this.auctionApplicationService
+                .lastUserOffer(id, offer, user));
+    }
+
+    @GetMapping("/{id}/lastOffer")
+    public ResponseEntity<DisplayLastUserOfferDto> getLastOffer(@PathVariable Long id){
+        return ResponseEntity.ok(this.auctionApplicationService
+                .getLastOffer(id));
     }
 }

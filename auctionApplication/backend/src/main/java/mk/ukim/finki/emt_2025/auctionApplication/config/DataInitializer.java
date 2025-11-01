@@ -49,7 +49,7 @@ public class DataInitializer {
 
         Item item1 = new Item("Car", 60000, "car.jpg", "image/jpeg", carBytes);
         Item item2 = new Item("Field", 80000, "field.jpg", "image/jpeg", fieldBytes);
-        Item item3 = new Item("Real Estate", 600000, "realEstate.jpg", "image/jpeg", realEstateBytes);
+        Item item3 = new Item("Real Estate", 6000000, "realEstate.jpg", "image/jpeg", realEstateBytes);
         Item item4 = new Item("Flat", 190000, "flat.jpg", "image/jpeg", flatBytes);
 
         itemRepository.save(item1);

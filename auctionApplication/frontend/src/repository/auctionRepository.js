@@ -19,6 +19,12 @@ const auctionRepository = {
     },
     finishAuction: async (id) => {
         return await instance.put(`/auctions/${id}/finish`)
+    },
+    addOffer: async (id, data) => {
+        return await instance.post(`/auctions/${id}/addOffer`, data);
+    },
+    getLastOffer: async (id) => {
+        return await instance.get(`/auctions/${id}/lastOffer`);
     }
 };
 

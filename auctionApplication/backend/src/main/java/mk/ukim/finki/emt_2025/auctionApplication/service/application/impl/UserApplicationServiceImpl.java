@@ -4,6 +4,7 @@ import mk.ukim.finki.emt_2025.auctionApplication.dto.LoginUserRequestDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.LoginUserResponseDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.RegisterUserRequestDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.RegisterUserResponseDto;
+import mk.ukim.finki.emt_2025.auctionApplication.exceptions.UserNotFoundException;
 import mk.ukim.finki.emt_2025.auctionApplication.helpers.JwtHelper;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 import mk.ukim.finki.emt_2025.auctionApplication.service.application.UserApplicationService;
@@ -70,5 +71,12 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
         LoginUserResponseDto loginUserResponseDto = new LoginUserResponseDto(token);
         return loginUserResponseDto;
+    }
+
+    @Override
+    public RegisterUserResponseDto findByUsername(String username) {
+        return RegisterUserResponseDto.from(this.userService
+                .findByUsername(username)
+                .orElseThrow(UserNotFoundException::new));
     }
 }

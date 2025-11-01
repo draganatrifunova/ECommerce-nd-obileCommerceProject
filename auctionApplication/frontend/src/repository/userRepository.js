@@ -25,6 +25,10 @@ const userRepository = {
 
     login: async (data) => {
         return await instance.post(`/users/login`, data)
+    },
+
+    findByUsername: async (username) => {
+        return await instance.get(`/users/byUsername/${username}`);
     }
 };
 

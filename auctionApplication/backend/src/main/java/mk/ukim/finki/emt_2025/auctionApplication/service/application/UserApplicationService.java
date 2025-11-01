@@ -23,4 +23,5 @@ public interface UserApplicationService {
     void addVisitor(Long visitorId, Long auctionId);
 
     LoginUserResponseDto login(LoginUserRequestDto loginUserRequestDto);
+    RegisterUserResponseDto findByUsername(String username);
 }

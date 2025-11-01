@@ -41,11 +41,15 @@ public class Auction {
     )
     private List<User> visitors;
 
+    private String lastUserOffered;
+    private int lastPriceOffered;
+
     public Auction(User organizer, Item item) {
         this.organizer = organizer;
         status = Status.RESERVED;
         visitors = new ArrayList<>();
         this.item = item;
+        this.lastPriceOffered = item.getPrice();
     }
 
 

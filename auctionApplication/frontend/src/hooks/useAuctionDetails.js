@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
 import auctionRepository from "../repository/auctionRepository";
-import auctionDetails from "../ui/components/auctions/AuctionDetails/AuctionDetails";
 
 const useAuctionDetails = (id) => {
     const [auction, setAuction] = useState(null);
@@ -40,7 +39,7 @@ const useAuctionDetails = (id) => {
             .finishAuction(id)
             .then(() => fetch())
             .catch((error) => console.log(error));
-    }, [id, fetch])
+    }, [id, fetch]);
 
     useEffect(() => {
         fetch()

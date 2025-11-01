@@ -5,13 +5,17 @@ import {ArrowBack} from "@mui/icons-material";
 import {useContext} from "react";
 import AuthContext from "../../../../contexts/authContext";
 import useItems from "../../../../hooks/useItem";
+import useOffer from "../../../../hooks/useOffer";
+import {useTheme} from '@mui/material/styles';
 
 const AuctionDetails = () => {
+    const theme = useTheme();
     const navigate = useNavigate();
     const {id} = useParams();
     const {auction, fetch, onCancel, addVisitor, onStart} = useAuctionDetails(id);
     const {user: loggedInUser} = useContext(AuthContext);
     const {fetch: refreshItems} = useItems();
+    const {lastOffer} = useOffer(id);
 
     const handleCancel = async () => {
         await onCancel(); // This cancels and refreshes auction details
@@ -91,6 +95,24 @@ const AuctionDetails = () => {
                             >
                                 Go to Auction
                             </Button>
+                        </Box>
+                    )}
+
+                    {(auction.status === "FINISHED" &&
+                        <Box display="flex" justifyContent="center" flexDirection="column"
+                             sx={{p: 5, border: '4px solid #ccc', borderRadius: 2}}>
+                            <Typography color="error" variant="h4" sx={{textAlign: 'center', fontWeight: "bold"}}>
+                                SOLD!!!
+                            </Typography>
+                            <Typography sx={{
+                                textAlign: 'center',
+                                mt: 2,
+                                fontStyle: "italic",
+                                color: theme.palette.success.main
+                            }} variant="h6">
+                                Congratulations! The winning bidder is {lastOffer?.lastUsername} with a final offer
+                                of {lastOffer?.lastPrice}$.
+                            </Typography>
                         </Box>
                     )}
 

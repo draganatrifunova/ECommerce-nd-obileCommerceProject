@@ -23,14 +23,14 @@ public class UserController {
         this.userApplicationService = userApplicationService;
     }
 
-    /*
-    @GetMapping("/{username}")
+
+    @GetMapping("/byUsername/{username}")
     public ResponseEntity<RegisterUserResponseDto> findByUsername(@PathVariable String username){
         return ResponseEntity.ok(userApplicationService
                 .findByUsername(username));
     }
 
-     */
+
 
     @GetMapping("/me")
     public ResponseEntity<RegisterUserResponseDto> me(@AuthenticationPrincipal User user){

@@ -1,5 +1,6 @@
 package mk.ukim.finki.emt_2025.auctionApplication.service.domain;
 
+import mk.ukim.finki.emt_2025.auctionApplication.dto.RegisterUserResponseDto;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 

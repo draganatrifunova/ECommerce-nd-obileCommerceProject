@@ -2,6 +2,8 @@ package mk.ukim.finki.emt_2025.auctionApplication.service.application.impl;
 
 
 import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayAuctionDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.CreateLastUserOfferDto;
+import mk.ukim.finki.emt_2025.auctionApplication.dto.DisplayLastUserOfferDto;
 import mk.ukim.finki.emt_2025.auctionApplication.dto.RegisterUserResponseDto;
 import mk.ukim.finki.emt_2025.auctionApplication.model.User;
 import mk.ukim.finki.emt_2025.auctionApplication.service.application.AuctionApplicationService;
@@ -63,5 +65,18 @@ public class AuctionApplicationServiceImpl implements AuctionApplicationService 
     public RegisterUserResponseDto joinAuction(Long auctionId, User visitor) {
         return RegisterUserResponseDto.from(this.auctionService
                 .joinAuction(auctionId, visitor));
+    }
+
+    @Override
+    public DisplayLastUserOfferDto lastUserOffer(Long auctionId, CreateLastUserOfferDto lastUserOfferDto, User user) {
+        return DisplayLastUserOfferDto
+                .from(this.auctionService
+                .lastUserOffer(auctionId, lastUserOfferDto.price(), user.getUsername()));
+    }
+
+    @Override
+    public DisplayLastUserOfferDto getLastOffer(Long auctionId) {
+        return DisplayLastUserOfferDto.from(this.auctionService
+                .findById(auctionId));
     }
 }

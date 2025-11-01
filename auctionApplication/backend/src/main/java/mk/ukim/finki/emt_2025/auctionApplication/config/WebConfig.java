@@ -61,7 +61,10 @@ public class WebConfig {
                                 "/api/auctions/{id}/start",
                                 "/api/auctions/{id}/cancel",
                                 "/api/auctions/{id}/finish",
-                                "/api/auctions/{auctionId}/addVisitor"
+                                "/api/auctions/{auctionId}/addVisitor",
+                                "/api/auctions/{id}/lastOffer",
+                                "/api/auctions/{id}/addOffer",
+                                "/api/users/byUsername/{username}"
                         ).hasRole("CUSTOMER")
                         // owner endpoints
                         .requestMatchers(
