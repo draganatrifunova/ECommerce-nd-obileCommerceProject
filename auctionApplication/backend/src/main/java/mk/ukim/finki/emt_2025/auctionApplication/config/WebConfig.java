@@ -45,7 +45,10 @@ public class WebConfig {
                                 "/h2-console/**",
                                 "/api/users/register",
                                 "/api/users/login",
-                                "/api/items/{id}/image"
+                                "/api/items/{id}/image",
+                                "/ws/**",
+                                "/topic/**",
+                                "/ws/info**"
                         ).permitAll()
                         .requestMatchers("/api/users/me").authenticated()
                         // customer endpoints
@@ -84,10 +87,16 @@ public class WebConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // React frontend
+        // Use allowedOriginPatterns instead of allowedOrigins
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+                "ws://localhost:3000"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        //configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

@@ -18,9 +18,6 @@ public interface UserService {
 
     User findById(Long id);
 
-    // na krajo ke treba da se izbrise addVisitor()
-    void addVisitor(Long visitorId, Long auctionId);
-
     Optional<User> findByUsername(String username);
 
     User login(String username, String password);

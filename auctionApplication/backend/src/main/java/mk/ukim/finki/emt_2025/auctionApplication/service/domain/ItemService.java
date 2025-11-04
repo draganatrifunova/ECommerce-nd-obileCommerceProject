@@ -14,6 +14,5 @@ public interface ItemService {
     List<Item> listAllItems();
 
     void deleteItem(Long itemId);
-
     Auction createAuction(Item item, User organizer);
 }

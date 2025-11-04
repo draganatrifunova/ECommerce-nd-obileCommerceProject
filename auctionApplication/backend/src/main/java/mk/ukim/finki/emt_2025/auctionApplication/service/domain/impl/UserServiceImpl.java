@@ -94,25 +94,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addVisitor(Long visitorId, Long auctionId) {
-        User visitor = this.findById(visitorId);
-        Auction auction = this.auctionRepository
-                .findById(auctionId)
-                .orElseThrow(AuctionNotFoundException::new);
-
-        if(auction.getStatus() != Status.RESERVED){
-            throw new AuctionStatusIsNotProper();
-        }
-
-        if(Objects.equals(auction.getOrganizer().getId(), visitorId)){
-            throw new AuctionOrganizerCanNotBeVisitor();
-        }
-
-        auction.getVisitors().add(visitor);
-        this.auctionRepository.save(auction);
-    }
-
-    @Override
     public Optional<User> findByUsername(String username) {
         return this.userRepository
                 .findByUsername(username);

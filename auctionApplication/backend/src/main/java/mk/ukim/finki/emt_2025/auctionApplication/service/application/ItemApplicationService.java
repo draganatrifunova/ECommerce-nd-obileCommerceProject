@@ -20,6 +20,5 @@ public interface ItemApplicationService {
     List<DisplayItemDto> listAllItems();
 
     void deleteItem(Long itemId);
-
     Auction createAuction(Long id, User organizer);
 }

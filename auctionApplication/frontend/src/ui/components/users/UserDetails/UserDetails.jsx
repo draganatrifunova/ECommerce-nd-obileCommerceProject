@@ -60,12 +60,6 @@ const UserDetails = () => {
 
                     <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
                         <Button
-                            variant="contained"
-                            color="primary">
-                            Register as a visitor
-                        </Button>
-
-                        <Button
                             variant="outlined"
                             startIcon={<ArrowBack/>}
                             onClick={() => navigate("/users")}

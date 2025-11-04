@@ -6,7 +6,6 @@ const useOffer = (auctionId) => {
     const [loading, setLoading] = useState(false);
 
     const fetch = useCallback(() => {
-        setLastOffer(null);
         setLoading(true);
         auctionRepository
             .getLastOffer(auctionId)
@@ -19,21 +18,21 @@ const useOffer = (auctionId) => {
 
     const addOffer = useCallback((offerData) => {
         setLoading(true);
-        auctionRepository
+        return auctionRepository
             .addOffer(auctionId, offerData)
             .then(((response) => {
-                setLastOffer(response.data); // update with latest offer
-                return fetch();
+                setLoading(false);
+                return response;
             }))
             .catch((error) => console.log(error));
-    }, [auctionId, fetch]);
+    }, [auctionId]);
 
     useEffect(() => {
         fetch();
-    }, [auctionId, fetch]);
+    }, [fetch]);
 
 
-    return {lastOffer, addOffer, loading};
+    return {lastOffer, addOffer, loading, fetch};
 };
 
 export default useOffer;

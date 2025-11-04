@@ -2,11 +2,12 @@ import {useNavigate, useParams} from "react-router-dom";
 import useAuctionDetails from "../../../../hooks/useAuctionDetails";
 import {Box, Breadcrumbs, Button, CircularProgress, Link, Paper, Stack, Typography} from "@mui/material";
 import {ArrowBack} from "@mui/icons-material";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import AuthContext from "../../../../contexts/authContext";
 import useItems from "../../../../hooks/useItem";
 import useOffer from "../../../../hooks/useOffer";
 import {useTheme} from '@mui/material/styles';
+import useAuctionWebSocket from "../../../../hooks/useAuctionWebSocket";
 
 const AuctionDetails = () => {
     const theme = useTheme();
@@ -15,20 +16,33 @@ const AuctionDetails = () => {
     const {auction, fetch, onCancel, addVisitor, onStart} = useAuctionDetails(id);
     const {user: loggedInUser} = useContext(AuthContext);
     const {fetch: refreshItems} = useItems();
-    const {lastOffer} = useOffer(id);
+    const {lastOffer, fetch: refreshOffer, loading: offerLoading} = useOffer(id);
+
+
+    const {realTimeAuction, realTimeOffer} = useAuctionWebSocket(id);
 
     const handleCancel = async () => {
         await onCancel(); // This cancels and refreshes auction details
         refreshItems(); // This refreshes the items list
     };
 
+    useEffect(() => {
+        if (id && auction?.status === "FINISHED") {
+            refreshOffer();
+        }
+    }, [id, auction?.status, refreshOffer]);
+
 
     if (!auction) {
         return <Box className="progress-box"><CircularProgress/></Box>
     }
-    const isOrganizer = loggedInUser?.sub === auction.organizerUsername;
-    const isNotOrganizer = loggedInUser?.sub !== auction.organizerUsername;
-    const hasJoined = auction.visitors_username?.includes(loggedInUser?.sub);
+
+    const displayAuction = realTimeAuction || auction;
+    const displayOffer = realTimeOffer || lastOffer;
+
+    const isOrganizer = loggedInUser?.sub === displayAuction.organizerUsername;
+    const isNotOrganizer = loggedInUser?.sub !== displayAuction.organizerUsername;
+    const hasJoined = displayAuction.visitors_username?.includes(loggedInUser?.sub);
 
     return (
         <Box width={750} mx="auto" mt={3}>
@@ -44,17 +58,17 @@ const AuctionDetails = () => {
                 >
                     Auctions
                 </Link>
-                <Typography color="text.primary">{auction.id}</Typography>
+                <Typography color="text.primary">{displayAuction.id}</Typography>
             </Breadcrumbs>
 
             <Paper elevation={12} sx={{p: 4, borderRadius: 4}}>
                 <Stack spacing={3}>
                     <Typography variant="h4" fontWeight={600}>
-                        ID: {auction.id}
+                        ID: {displayAuction.id}
                     </Typography>
 
                     <Typography variant="h6" color="text.secondary" sx={{fontStyle: 'italic'}}>
-                        STATUS: {auction.status}
+                        STATUS: {displayAuction.status}
                     </Typography>
 
                     <Box display={"flex"} justifyContent={"space-between"} sx={{fontStyle: 'italic'}}>
@@ -63,7 +77,8 @@ const AuctionDetails = () => {
                                 Item Info:
                             </Typography>
                             <Typography color="primary" variant="h6">
-                                <span style={{fontWeight: 'bold'}}>[ID {auction.item_id}]:</span> {auction.itemName}
+                                <span
+                                    style={{fontWeight: 'bold'}}>[ID {displayAuction.item_id}]:</span> {displayAuction.itemName}
                             </Typography>
                         </Stack>
                         <Stack>
@@ -72,33 +87,34 @@ const AuctionDetails = () => {
                             </Typography>
                             <Typography color="primary" variant="h6">
                                 <span
-                                    style={{fontWeight: 'bold'}}>[ID {auction.organizer_id}]:</span> {auction.organizerName} {auction.organizerSurname}
+                                    style={{fontWeight: 'bold'}}>[ID {displayAuction.organizer_id}]:</span> {displayAuction.organizerName} {displayAuction.organizerSurname}
                             </Typography>
                         </Stack>
                     </Box>
 
                     <Typography variant="h6" color="text.secondary">
-                        <strong>Start: </strong> {auction.timeStarting ? new Date(auction.timeStarting).toLocaleString() : "Not yet started"}
+                        <strong>Start: </strong> {displayAuction.timeStarting ? new Date(displayAuction.timeStarting).toLocaleString() : "Not yet started"}
                     </Typography>
 
                     <Typography variant="h6" color="text.secondary">
-                        <strong>End: </strong> {auction.timeFinishing ? new Date(auction.timeFinishing).toLocaleString() : "Not yet ended"}
+                        <strong>End: </strong> {displayAuction.timeFinishing ? new Date(displayAuction.timeFinishing).toLocaleString() : "Not yet ended"}
                     </Typography>
 
-                    {((auction.status === "STARTED") && (isOrganizer || hasJoined)) && (
+                    {((displayAuction.status === "STARTED") && (isOrganizer || hasJoined)) && (
                         <Box display="flex" justifyContent="center" mt={1}>
                             <Button
                                 variant="contained"
                                 color="success"
                                 sx={{width: '200px'}}
-                                onClick={() => navigate(`/auctions/${auction.id}/start`)}
+                                onClick={() => navigate(`/auctions/${displayAuction.id}/start`)}
                             >
                                 Go to Auction
                             </Button>
                         </Box>
                     )}
 
-                    {(auction.status === "FINISHED" &&
+                    {(displayAuction.status === "FINISHED" && displayOffer?.lastUsername != null &&
+                        displayOffer?.lastPrice != null &&
                         <Box display="flex" justifyContent="center" flexDirection="column"
                              sx={{p: 5, border: '4px solid #ccc', borderRadius: 2}}>
                             <Typography color="error" variant="h4" sx={{textAlign: 'center', fontWeight: "bold"}}>
@@ -110,8 +126,8 @@ const AuctionDetails = () => {
                                 fontStyle: "italic",
                                 color: theme.palette.success.main
                             }} variant="h6">
-                                Congratulations! The winning bidder is {lastOffer?.lastUsername} with a final offer
-                                of {lastOffer?.lastPrice}$.
+                                Congratulations! The winning bidder is {displayOffer?.lastUsername} with a final offer
+                                of {displayOffer?.lastPrice}$.
                             </Typography>
                         </Box>
                     )}
@@ -124,13 +140,13 @@ const AuctionDetails = () => {
                                     color="primary"
                                     className="reserve-btn"
                                     sx={{mr: 1}}
-                                    disabled={auction.status !== "RESERVED"}
+                                    disabled={displayAuction.status !== "RESERVED"}
                                     onClick={() => {
-                                        if (!auction.visitors_username || auction.visitors_username.length === 0) {
+                                        if (!displayAuction.visitors_username || displayAuction.visitors_username.length === 0) {
                                             alert("Sorry, you cannot start the auction. No visitors have registered yet.");
                                         } else {
                                             onStart();
-                                            navigate(`/auctions/${auction.id}/start`);
+                                            navigate(`/auctions/${displayAuction.id}/start`);
                                         }
                                     }}
                                 >
@@ -141,7 +157,7 @@ const AuctionDetails = () => {
                                     variant="contained"
                                     color="primary"
                                     onClick={handleCancel}
-                                    disabled={auction.status !== "RESERVED"}
+                                    disabled={displayAuction.status !== "RESERVED"}
                                 >
                                     Cancel Auction
                                 </Button>
@@ -152,7 +168,7 @@ const AuctionDetails = () => {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                disabled={(auction.status !== "RESERVED") || hasJoined}
+                                disabled={(displayAuction.status !== "RESERVED") || hasJoined}
                                 onClick={addVisitor}
                             >
                                 {hasJoined ? "JOINED" : "JOIN NOW"}

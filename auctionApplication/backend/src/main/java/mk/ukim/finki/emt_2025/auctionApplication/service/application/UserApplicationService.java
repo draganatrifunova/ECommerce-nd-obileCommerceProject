@@ -19,9 +19,6 @@ public interface UserApplicationService {
 
     RegisterUserResponseDto findById(Long id);
 
-    //da go brisam
-    void addVisitor(Long visitorId, Long auctionId);
-
     LoginUserResponseDto login(LoginUserRequestDto loginUserRequestDto);
     RegisterUserResponseDto findByUsername(String username);
 }

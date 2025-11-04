@@ -74,5 +74,4 @@ public class ItemServiceImpl implements ItemService {
         Auction auction = new Auction(organizer, item);
         return this.auctionRepository.save(auction);
     }
-
 }

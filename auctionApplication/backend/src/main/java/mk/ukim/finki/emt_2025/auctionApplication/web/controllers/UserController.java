@@ -72,17 +72,6 @@ public class UserController {
                 .findById(id));
     }
 
-    @PostMapping("/{visitorId}/addVisitor")
-    public ResponseEntity<Void> addVisitor(@PathVariable Long visitorId,
-                           @RequestParam Long auctionId) {
-
-        this.userApplicationService
-                .addVisitor(visitorId, auctionId);
-
-        return ResponseEntity
-                .noContent().build();
-    }
-
     @PostMapping("/login")
     public ResponseEntity<LoginUserResponseDto> login(@RequestBody LoginUserRequestDto loginUserRequestDto){
         return ResponseEntity.ok(userApplicationService

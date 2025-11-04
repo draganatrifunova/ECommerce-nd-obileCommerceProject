@@ -59,12 +59,6 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
-    public void addVisitor(Long visitorId, Long auctionId) {
-        this.userService
-                .addVisitor(visitorId, auctionId);
-    }
-
-    @Override
     public LoginUserResponseDto login(LoginUserRequestDto loginUserRequestDto) {
         User user = this.userService.login(loginUserRequestDto.username(), loginUserRequestDto.password());
         String token = jwtHelper.generateToken(user);

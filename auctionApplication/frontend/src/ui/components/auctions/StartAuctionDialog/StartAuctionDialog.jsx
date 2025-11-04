@@ -19,6 +19,7 @@ import useOffer from "../../../../hooks/useOffer";
 import userRepository from "../../../../repository/userRepository";
 import {ArrowBack} from "@mui/icons-material";
 import {useTheme} from '@mui/material/styles';
+import useAuctionWebSocket from "../../../../hooks/useAuctionWebSocket";
 
 
 const initialFormData = {
@@ -35,6 +36,9 @@ const StartAuctionDialog = () => {
     const {user: loggedInUser} = useContext(AuthContext);
     const {lastOffer, addOffer, loading} = useOffer(id);
     const [visitors, setVisitors] = useState([]);
+
+
+    const {realTimeAuction, realTimeOffer} = useAuctionWebSocket(id);
 
 
     useEffect(() => {
@@ -54,6 +58,9 @@ const StartAuctionDialog = () => {
         return <Box className="progress-box"><CircularProgress/></Box>
     }
 
+    const displayAuction = realTimeAuction || auction;
+    const displayOffer = realTimeOffer || lastOffer;
+
     const handleChange = (event) => {
         const {name, value} = event.target;
         setFormData({...formData, [name]: value});
@@ -69,14 +76,14 @@ const StartAuctionDialog = () => {
             return;
         }
 
-        if (lastOffer?.lastUsername === loggedInUser?.sub) {
+        if (displayOffer?.lastUsername === loggedInUser?.sub) {
             alert("You already have the latest offer. Wait for another bidder before placing a new one.");
             return;
         }
 
         // Check if there is a last offer and compare prices
-        if (lastOffer?.lastPrice != null && bidAmount <= lastOffer.lastPrice) {
-            alert(`Your bid must be higher than the current highest bid of ${lastOffer.lastPrice}$.`);
+        if (displayOffer?.lastPrice != null && bidAmount <= displayOffer.lastPrice) {
+            alert(`Your bid must be higher than the current highest bid of ${displayOffer.lastPrice}$.`);
             return;
         }
 
@@ -84,8 +91,8 @@ const StartAuctionDialog = () => {
         setFormData(initialFormData);
     };
 
-    const isOrganizer = loggedInUser?.sub === auction.organizerUsername;
-    const hasJoined = auction.visitors_username?.includes(loggedInUser?.sub);
+    const isOrganizer = loggedInUser?.sub === displayAuction.organizerUsername;
+    const hasJoined = displayAuction.visitors_username?.includes(loggedInUser?.sub);
 
 
     return (
@@ -97,21 +104,21 @@ const StartAuctionDialog = () => {
                     href="#"
                     onClick={(e) => {
                         e.preventDefault();
-                        navigate(`/auctions/${auction.id}`)
+                        navigate(`/auctions/${displayAuction.id}`)
                     }}>
                     Auction Details
                 </Link>
-                <Typography color="text.primary">{auction.id}</Typography>
+                <Typography color="text.primary">{displayAuction.id}</Typography>
             </Breadcrumbs>
 
             <Paper elevation={12} sx={{p: 4, borderRadius: 4}}>
                 <Stack spacing={4}>
                     <Typography variant="h4" fontWeight={600} color="primary">
-                        ID: {auction.id}
+                        ID: {displayAuction.id}
                     </Typography>
 
                     <Typography variant="h5" color="text.secondary" sx={{fontStyle: 'italic'}}>
-                        STATUS: {auction.status}
+                        STATUS: {displayAuction.status}
                     </Typography>
 
                     <Stack spacing={1}>
@@ -119,7 +126,8 @@ const StartAuctionDialog = () => {
                             Item Information:
                         </Typography>
                         <Typography color="primary" variant="h5">
-                            <span style={{fontWeight: 'bold'}}>[ITEM ID {auction.item_id}]:</span> {auction.itemName}
+                            <span
+                                style={{fontWeight: 'bold'}}>[ITEM ID {displayAuction.item_id}]:</span> {displayAuction.itemName}
                         </Typography>
 
                         <CardMedia
@@ -147,16 +155,16 @@ const StartAuctionDialog = () => {
                         </Typography>
                         <Typography color="primary" variant="h5">
                                 <span
-                                    style={{fontWeight: 'bold'}}>[ORGANIZER ID {auction.organizer_id}]:</span> {auction.organizerName} {auction.organizerSurname}
+                                    style={{fontWeight: 'bold'}}>[ORGANIZER ID {displayAuction.organizer_id}]:</span> {displayAuction.organizerName} {displayAuction.organizerSurname}
                         </Typography>
                     </Stack>
 
                     <Typography variant="h5">
-                        <strong>Start: </strong> {auction.timeStarting ? new Date(auction.timeStarting).toLocaleString() : "Not yet started"}
+                        <strong>Start: </strong> {displayAuction.timeStarting ? new Date(displayAuction.timeStarting).toLocaleString() : "Not yet started"}
                     </Typography>
 
                     <Typography variant="h5">
-                        <strong>End: </strong> {auction.timeFinishing ? new Date(auction.timeFinishing).toLocaleString() : "Not yet ended"}
+                        <strong>End: </strong> {displayAuction.timeFinishing ? new Date(displayAuction.timeFinishing).toLocaleString() : "Not yet ended"}
                     </Typography>
 
                     <Box>
@@ -186,17 +194,18 @@ const StartAuctionDialog = () => {
                     </Box>
 
 
-                    {(((isOrganizer || hasJoined) && lastOffer?.lastUsername != null &&
-                            lastOffer?.lastPrice != null && auction.status === "STARTED") &&
+                    {(((isOrganizer || hasJoined) && displayOffer?.lastUsername != null &&
+                            displayOffer?.lastPrice != null && displayAuction.status === "STARTED") &&
                         <Box>
                             <Typography variant="h5"
                                         sx={{mb: 2, textAlign: 'center', fontStyle: 'italic', fontWeight: 'bold'}}>LAST
                                 OFFER:</Typography>
                             <Typography variant="h6" sx={{textAlign: 'center', fontStyle: 'italic'}}>
-                                {lastOffer.lastUsername} just placed the latest bid of {lastOffer.lastPrice}$.
+                                {displayOffer.lastUsername} just placed the latest bid of {displayOffer.lastPrice}$.
                             </Typography>
                         </Box>
                     )}
+
 
                     {(hasJoined &&
                         <Box>
@@ -212,13 +221,14 @@ const StartAuctionDialog = () => {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={handleSubmit}>
+                                onClick={handleSubmit}
+                                disabled={displayAuction.status !== "STARTED"}>
                                 Place Bid
                             </Button>
                         </Box>
                     )}
 
-                    {(isOrganizer && (lastOffer?.lastUsername != null && lastOffer?.lastPrice != null) && auction.status === "STARTED" &&
+                    {(isOrganizer && (displayOffer?.lastUsername != null && displayOffer?.lastPrice != null) && displayAuction.status === "STARTED" &&
                         <Box display="flex" justifyContent="center" mt={1}>
                             <Button
                                 variant="contained"
@@ -230,7 +240,7 @@ const StartAuctionDialog = () => {
                         </Box>
                     )}
 
-                    {(auction.status === "FINISHED" && (isOrganizer || hasJoined) &&
+                    {(displayAuction.status === "FINISHED" && (isOrganizer || hasJoined) &&
                         <Box display="flex" justifyContent="center" flexDirection="column"
                              sx={{p: 5, border: '4px solid #ccc', borderRadius: 2}}>
                             <Typography color="error" variant="h4" sx={{textAlign: 'center', fontWeight: "bold"}}>
@@ -242,8 +252,8 @@ const StartAuctionDialog = () => {
                                 fontStyle: "italic",
                                 color: theme.palette.success.main
                             }} variant="h6">
-                                Congratulations! The winning bidder is {lastOffer?.lastUsername} with a final offer
-                                of {lastOffer?.lastPrice}$.
+                                Congratulations! The winning bidder is {displayOffer?.lastUsername} with a final offer
+                                of {displayOffer?.lastPrice}$.
                             </Typography>
                         </Box>
                     )}
